@@ -1,0 +1,150 @@
+/**
+ * Brightness Tracking
+ * by Golan Levin.
+ *
+ * Tracks the brightest pixel in a live video signal.
+ */
+
+
+import processing.video.*;
+
+Capture video;
+color orange=color(252,163,74);
+color blue=color(145,214,247);
+
+color yellow=color(245,235,146);
+color a=color(150, 252, 252);
+color b=color(255, 254, 232);
+color c=color(62, 59, 59);
+color d=color(70, 244, 240);
+color e=color(147, 142, 142);
+color f=color(20, 75, 118);
+color g=color(31, 43, 52);
+color black=color(0);
+PImage bg;
+
+void setup() {
+  size(640, 480);
+  // Uses the default video input, see the reference if this causes an error
+  video = new Capture(this, width, height);
+  video.start();
+  noStroke();
+  smooth();
+  bg=loadImage("IMG_9019.jpg");
+}
+
+void draw() {
+  background(255);
+  if (video.available()) {
+    video.read();
+   image(bg, 0, 0);
+   // image(video, 0, 0, width, height); // Draw the webcam video onto the screen
+    int brightestX = 0; // X-coordinate of the brightest video pixel
+    int brightestY = 0; // Y-coordinate of the brightest video pixel
+    float brightestValue = 0; // Brightness of the brightest video pixel
+    // Search for the brightest pixel: For each row of pixels in the video image and
+    // for each pixel in the yth row, compute each pixel's index in the video
+
+
+    int brightX=0;
+    int brightY=0;
+
+    video.loadPixels();
+    int index = 0;
+    for (int y = 0; y < video.height; y+=2) {
+      for (int x = 0; x < video.width; x+=2) {
+        // Get the color stored in the pixel
+        int pixelValue = video.pixels[index];
+        // Determine the brightness of the pixel
+        float pixelBrightness = brightness(pixelValue);
+        // If that value is brighter than any previous, then store the
+        // brightness of that pixel, as well as its (x,y) location
+        if (pixelBrightness>100 && pixelBrightness<150) {
+
+          brightY=y;
+          brightX=x;
+          //noFill();
+          fill(blue);
+          // fill(black);
+          //stroke(a);
+          //  fill(pixelValue/10);
+          ellipse(x, y, 5, 5);
+          //  println(brightY+brightX);
+          //rect(x, y, 10, 10);
+        }
+        /*
+        if (pixelBrightness<100 &&pixelBrightness>50) {
+
+         brightY=y;
+         brightX=x;
+         // noFill();
+         fill(b);
+         // stroke(b);
+         //  fill(pixelValue/10);
+
+         ellipse(x, y, 5, 5);
+         }
+         //一般
+         if (pixelBrightness>=100 && pixelBrightness<125) {
+
+         brightY=y;
+         brightX=x;
+
+         // stroke(c);
+         // noFill();
+         // fill(pixelValue);
+         fill(c);
+         ellipse(x, y, 5, 5);
+         }
+
+         if (pixelBrightness>=125 && pixelBrightness<150) {
+
+         brightY=y;
+         brightX=x;
+         //   stroke(d);
+         //  noFill();
+         // fill(pixelValue);
+         fill(d);
+         ellipse(x, y, 5, 5);
+         }
+         //亮
+         else if (pixelBrightness>=150 && pixelBrightness<175) {
+
+         brightY=y;
+         brightX=x;
+         // stroke(e);
+         // noFill();
+         fill(e);
+         ellipse(x, y, 5, 5);
+         }
+         */
+         else if (pixelBrightness>=150 && pixelBrightness<200) {
+
+         brightY=y;
+         brightX=x;
+         // stroke(f);
+         // noFill();
+         //fill(f);
+         fill(orange);
+         ellipse(x, y, 5, 5);
+         }
+
+
+
+        //傳值轉換 最亮
+        if (pixelBrightness >= 200) {
+
+          brightestY = y;
+          brightestX = x;
+
+          //     fill(g);
+          fill(yellow);
+          //noFill();
+         // stroke(g);
+          ellipse(brightestX, brightestY, 5, 5);
+        }
+        index++;
+      }
+    }
+  }
+}
